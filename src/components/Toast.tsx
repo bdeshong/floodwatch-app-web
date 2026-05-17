@@ -28,7 +28,19 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-[2000] flex flex-col gap-2 items-end pointer-events-none">
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 20,
+          right: 20,
+          zIndex: 2000,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          alignItems: 'flex-end',
+          pointerEvents: 'none',
+        }}
+      >
         {toasts.map((t) => (
           <ToastItem key={t.id} toast={t} onDismiss={dismiss} />
         ))}
@@ -42,37 +54,65 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => {
-    // Trigger enter animation on next tick
     const raf = requestAnimationFrame(() => setVisible(true))
-
     timerRef.current = setTimeout(() => {
       setVisible(false)
       setTimeout(() => onDismiss(toast.id), 300)
     }, 4000)
-
-    return () => {
-      cancelAnimationFrame(raf)
-      clearTimeout(timerRef.current)
-    }
+    return () => { cancelAnimationFrame(raf); clearTimeout(timerRef.current) }
   }, [toast.id, onDismiss])
 
   return (
     <div
-      className={`pointer-events-auto flex items-start gap-3 bg-red-600 text-white text-sm rounded-xl px-4 py-3 shadow-lg max-w-sm transition-all duration-300 ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-      }`}
+      style={{
+        pointerEvents: 'auto',
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 10,
+        background: 'var(--bg-panel)',
+        border: '1px solid var(--stage-moderate)',
+        borderLeft: '3px solid var(--stage-moderate)',
+        borderRadius: 10,
+        padding: '10px 14px',
+        maxWidth: 340,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(8px)',
+      }}
     >
-      <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--stage-moderate)" strokeWidth="2" style={{ flexShrink: 0, marginTop: 1 }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
       </svg>
-      <span className="flex-1">{toast.message}</span>
+      <span
+        style={{
+          flex: 1,
+          fontFamily: 'Syne, sans-serif',
+          fontSize: 12,
+          color: 'var(--text-primary)',
+          lineHeight: 1.45,
+        }}
+      >
+        {toast.message}
+      </span>
       <button
         onClick={() => onDismiss(toast.id)}
-        className="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity"
         aria-label="Dismiss"
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: 2,
+          color: 'var(--text-muted)',
+          flexShrink: 0,
+          display: 'flex',
+          transition: 'color 0.15s',
+        }}
+        onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = 'var(--text-primary)')}
+        onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)')}
       >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path strokeLinecap="round" d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
     </div>

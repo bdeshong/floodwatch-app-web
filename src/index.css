@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 
 html,
 body,
@@ -7,3 +8,147 @@ body,
   margin: 0;
   padding: 0;
 }
+
+/* ── Dark theme (default) ───────────────────── */
+:root {
+  --bg-base:    #06101c;
+  --bg-surface: #091628;
+  --bg-panel:   #0c1c30;
+  --bg-raised:  #112238;
+  --bg-hover:   #162a42;
+  --border:        #1a3048;
+  --border-light:  #234060;
+  --accent:        #0cc8bc;
+  --accent-dim:    rgba(12, 200, 188, 0.10);
+  --accent-mid:    rgba(12, 200, 188, 0.22);
+  --accent-glow:   rgba(12, 200, 188, 0.40);
+  --text-primary:  #c8dff2;
+  --text-secondary:#6b8fad;
+  --text-muted:    #3d5c76;
+  --text-mono:     #91bcd8;
+  --stage-action:  #f4a74b;
+  --stage-flood:   #e07a3a;
+  --stage-moderate:#d94f4f;
+  --stage-major:   #c02020;
+  /* layout-specific */
+  --header-bg:      #091628;
+  --header-text:    #c8dff2;
+  --backdrop:       rgba(3, 10, 18, 0.72);
+  --pill-bg:        rgba(9, 22, 40, 0.88);
+  --attribution-bg: rgba(6, 16, 28, 0.80);
+}
+
+/* ── Light theme ────────────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-base:    #eef4fb;
+    --bg-surface: #f5f9fe;
+    --bg-panel:   #ffffff;
+    --bg-raised:  #edf4fd;
+    --bg-hover:   #e3eef9;
+    --border:        #c4d9ee;
+    --border-light:  #b0cce4;
+    --accent:        #0882aa;
+    --accent-dim:    rgba(8, 130, 170, 0.08);
+    --accent-mid:    rgba(8, 130, 170, 0.18);
+    --accent-glow:   rgba(8, 130, 170, 0.28);
+    --text-primary:  #0c1e2e;
+    --text-secondary:#3a5a78;
+    --text-muted:    #7090aa;
+    --text-mono:     #1e4060;
+    --stage-action:  #b45309;
+    --stage-flood:   #b54d20;
+    --stage-moderate:#b91c1c;
+    --stage-major:   #7f1d1d;
+    /* layout-specific */
+    --header-bg:      #1e3a8a;
+    --header-text:    #e8f4ff;
+    --backdrop:       rgba(0, 20, 44, 0.50);
+    --pill-bg:        rgba(255, 255, 255, 0.92);
+    --attribution-bg: rgba(238, 244, 251, 0.90);
+  }
+}
+
+body {
+  font-family: 'Syne', system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Gauge marker ───────────────────────────── */
+.gauge-marker-wrap {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--accent-glow);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gauge-marker-wrap:hover .gauge-dot {
+  background: #fff;
+  transform: scale(1.4);
+  box-shadow: 0 0 14px var(--accent), 0 0 28px var(--accent-glow);
+}
+
+/* ── Leaflet overrides ──────────────────────── */
+.leaflet-control-zoom a {
+  background-color: var(--bg-panel) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Syne', sans-serif !important;
+  transition: background 0.15s, color 0.15s;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: var(--bg-raised) !important;
+  color: var(--accent) !important;
+}
+
+.leaflet-bar {
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a:first-child { border-radius: 7px 7px 0 0 !important; }
+.leaflet-bar a:last-child  { border-radius: 0 0 7px 7px !important; border-bottom: none !important; }
+
+.leaflet-control-attribution {
+  background: var(--attribution-bg) !important;
+  color: var(--text-muted) !important;
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  backdrop-filter: blur(4px);
+}
+
+.leaflet-control-attribution a { color: var(--text-secondary) !important; }
+
+.leaflet-tooltip {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  font-family: 'Syne', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 5px 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+  white-space: nowrap;
+}
+
+.leaflet-tooltip-top::before    { border-top-color: var(--border-light) !important; }
+.leaflet-tooltip-bottom::before { border-bottom-color: var(--border-light) !important; }
