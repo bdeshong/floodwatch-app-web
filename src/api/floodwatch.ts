@@ -1,6 +1,6 @@
 import type { Gauge, MapBounds } from '../types'
 
-const BASE = 'http://localhost:8080'
+const BASE = 'https://api.d5gtech.com/water'
 
 export async function fetchGaugesInBounds(bounds: MapBounds): Promise<Gauge[]> {
   const params = new URLSearchParams({
