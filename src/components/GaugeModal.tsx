@@ -187,6 +187,16 @@ export function GaugeModal({ gauge, onClose }: Props) {
         {/* Teal accent top bar */}
         <div style={{ height: 3, background: `linear-gradient(90deg, var(--accent) 0%, transparent 100%)`, flexShrink: 0 }} />
 
+        {/* Loading bar */}
+        <div style={{ height: 2, background: 'var(--border)', flexShrink: 0, overflow: 'hidden', opacity: isLoading ? 1 : 0, transition: 'opacity 0.3s' }}>
+          <div style={{
+            height: '100%',
+            width: '40%',
+            background: `linear-gradient(90deg, transparent, var(--accent), transparent)`,
+            animation: 'loading-sweep 1.4s ease-in-out infinite',
+          }} />
+        </div>
+
         {/* Header */}
         <div
           style={{

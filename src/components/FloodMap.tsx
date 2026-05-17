@@ -7,8 +7,7 @@ import { useColorScheme } from '../hooks/useColorScheme'
 import { GaugeModal } from './GaugeModal'
 import type { Gauge, MapBounds } from '../types'
 
-const ATLANTA: [number, number] = [33.749, -84.388]
-const DEFAULT_ZOOM = 10
+const DEFAULT_ZOOM = 12
 const MIN_ZOOM = 8
 
 const GAUGE_ICON = L.divIcon({
@@ -21,6 +20,21 @@ const GAUGE_ICON = L.divIcon({
 
 interface MapControllerProps {
   onBoundsChange: (bounds: MapBounds, zoom: number) => void
+}
+
+function GeolocateOnMount() {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) => map.setView([pos.coords.latitude, pos.coords.longitude], DEFAULT_ZOOM),
+      () => { /* denied or unavailable — stay on Atlanta default */ },
+      { timeout: 8000, maximumAge: 60_000 }
+    )
+  }, [map])
+
+  return null
 }
 
 function MapController({ onBoundsChange }: MapControllerProps) {
@@ -77,7 +91,7 @@ export function FloodMap() {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <MapContainer
-        center={ATLANTA}
+        center={[33.749, -84.388]}
         zoom={DEFAULT_ZOOM}
         style={{ width: '100%', height: '100%' }}
         zoomControl
@@ -88,6 +102,7 @@ export function FloodMap() {
           subdomains="abcd"
           maxZoom={19}
         />
+        <GeolocateOnMount />
         <MapController onBoundsChange={handleBoundsChange} />
         {gauges.map((gauge) => (
           <Marker

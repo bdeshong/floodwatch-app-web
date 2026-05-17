@@ -103,6 +103,11 @@ body {
   box-shadow: 0 0 14px var(--accent), 0 0 28px var(--accent-glow);
 }
 
+@keyframes loading-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
 /* ── Leaflet overrides ──────────────────────── */
 .leaflet-control-zoom a {
   background-color: var(--bg-panel) !important;
