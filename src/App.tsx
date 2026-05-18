@@ -29,16 +29,7 @@ export default function App() {
           >
             {/* Brand */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <circle cx="11" cy="11" r="10" stroke="var(--accent)" strokeWidth="1.5" fill="var(--accent)" fillOpacity="0.08" />
-                <path
-                  d="M3 11 C5 8.5 6.5 8.5 8 11 S10.5 13.5 12 11 S14.5 8.5 16 11 S18.5 13.5 19 12"
-                  stroke="var(--accent)"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
+              <img src="/fw-icon.png" width="28" height="28" style={{ borderRadius: 6 }} alt="FloodWatch" />
               <span
                 style={{
                   fontFamily: 'Syne, sans-serif',
