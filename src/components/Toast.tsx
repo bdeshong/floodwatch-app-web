@@ -65,20 +65,22 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
   return (
     <div
       style={{
+        position: 'relative',
         pointerEvents: 'auto',
         display: 'flex',
         alignItems: 'flex-start',
         gap: 10,
         background: 'var(--bg-panel)',
         border: '1px solid var(--stage-moderate)',
-        borderLeft: '3px solid var(--stage-moderate)',
+        borderLeft: '4px solid var(--stage-moderate)',
         borderRadius: 10,
-        padding: '10px 14px',
+        padding: '10px 14px 14px',
         maxWidth: 340,
         boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-        transition: 'opacity 0.3s ease, transform 0.3s ease',
+        overflow: 'hidden',
+        transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(8px)',
+        transform: visible ? 'none' : 'translateX(10px)',
       }}
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--stage-moderate)" strokeWidth="2" style={{ flexShrink: 0, marginTop: 1 }}>
@@ -115,6 +117,20 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
           <path strokeLinecap="round" d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
+      {/* Timer drain bar */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 4,
+          right: 0,
+          height: 2,
+          background: 'var(--stage-moderate)',
+          opacity: 0.45,
+          transformOrigin: 'left center',
+          animation: 'toast-progress 3.8s 0.2s linear forwards',
+        }}
+      />
     </div>
   )
 }

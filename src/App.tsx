@@ -29,13 +29,15 @@ export default function App() {
           >
             {/* Brand */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="10" stroke="var(--accent)" strokeWidth="1.5" fill="var(--accent)" fillOpacity="0.08" />
                 <path
-                  d="M12 2C7.5 2 3 6 3 11c0 6 9 13 9 13s9-7 9-13c0-5-4.5-9-9-9z"
-                  fill="var(--accent)"
-                  opacity="0.9"
+                  d="M3 11 C5 8.5 6.5 8.5 8 11 S10.5 13.5 12 11 S14.5 8.5 16 11 S18.5 13.5 19 12"
+                  stroke="var(--accent)"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  fill="none"
                 />
-                <circle cx="12" cy="11" r="3" fill="var(--bg-surface)" />
               </svg>
               <span
                 style={{
@@ -66,17 +68,22 @@ export default function App() {
 
             {/* Live indicator */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: 'var(--accent)',
-                  boxShadow: '0 0 6px var(--accent-glow)',
-                  animation: 'gauge-ping 2.8s cubic-bezier(0,0,0.2,1) infinite',
-                }}
-              />
+              <div style={{ position: 'relative', width: 10, height: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="live-ring" />
+                <span
+                  style={{
+                    display: 'block',
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    background: 'var(--accent)',
+                    boxShadow: '0 0 6px var(--accent-glow)',
+                    position: 'relative',
+                    zIndex: 1,
+                    flexShrink: 0,
+                  }}
+                />
+              </div>
               <span
                 style={{
                   fontFamily: 'IBM Plex Mono, monospace',
@@ -84,6 +91,7 @@ export default function App() {
                   fontWeight: 500,
                   color: 'var(--accent)',
                   letterSpacing: '0.1em',
+                  animation: 'gauge-ping 3s ease-in-out infinite',
                 }}
               >
                 LIVE

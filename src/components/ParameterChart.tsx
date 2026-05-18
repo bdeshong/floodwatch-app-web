@@ -37,11 +37,12 @@ export function ParameterChart({ parameter }: Props) {
 
   return (
     <div
+      className="chart-card"
       style={{
         background: 'var(--bg-raised)',
         border: '1px solid var(--border)',
-        borderRadius: 10,
-        padding: '12px 14px 8px',
+        borderRadius: 12,
+        padding: '14px 16px 10px',
       }}
     >
       {/* Header row */}
@@ -62,15 +63,15 @@ export function ParameterChart({ parameter }: Props) {
           <span
             style={{
               fontFamily: 'IBM Plex Mono, monospace',
-              fontSize: 17,
-              fontWeight: 500,
-              color: 'var(--accent)',
-              letterSpacing: '-0.02em',
+              fontSize: 22,
+              fontWeight: 400,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.03em',
               lineHeight: 1,
             }}
           >
             {currentValue!.toFixed(2)}
-            <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 4, fontWeight: 400 }}>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 5, fontWeight: 400 }}>
               {parameter.unit}
             </span>
           </span>
@@ -81,7 +82,7 @@ export function ParameterChart({ parameter }: Props) {
         <AreaChart data={data} margin={{ top: 2, right: 0, bottom: 0, left: -14 }}>
           <defs>
             <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="var(--accent)" stopOpacity={0.22} />
+              <stop offset="0%"   stopColor="var(--accent)" stopOpacity={0.28} />
               <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
             </linearGradient>
           </defs>

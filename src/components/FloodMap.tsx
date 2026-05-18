@@ -12,7 +12,7 @@ const MIN_ZOOM = 8
 
 const GAUGE_ICON = L.divIcon({
   className: '',
-  html: '<div class="gauge-marker-wrap"><div class="gauge-dot"></div></div>',
+  html: '<div class="gauge-marker-wrap"><span class="gauge-ring"></span><div class="gauge-dot"></div></div>',
   iconSize: [22, 22],
   iconAnchor: [11, 11],
   tooltipAnchor: [0, -13],
@@ -58,16 +58,18 @@ const pillStyle: React.CSSProperties = {
   position: 'absolute',
   zIndex: 500,
   background: 'var(--pill-bg)',
-  backdropFilter: 'blur(8px)',
+  backdropFilter: 'blur(12px)',
+  WebkitBackdropFilter: 'blur(12px)',
   border: '1px solid var(--border)',
-  borderRadius: 20,
-  padding: '6px 14px',
+  borderRadius: 24,
+  padding: '7px 16px',
   fontFamily: 'IBM Plex Mono, monospace',
   fontSize: 11,
-  color: 'var(--text-primary)',
+  color: 'var(--text-secondary)',
   pointerEvents: 'none' as const,
   letterSpacing: '0.04em',
-  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+  boxShadow: '0 4px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04)',
+  animation: 'fade-up 0.2s ease both',
 }
 
 export function FloodMap() {
@@ -120,12 +122,11 @@ export function FloodMap() {
 
       {/* Loading */}
       {isFetching && (
-        <div style={{ ...pillStyle, top: 14, right: 14, display: 'flex', alignItems: 'center', gap: 8, pointerEvents: 'none' }}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5">
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
-              <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite" />
-            </path>
-          </svg>
+        <div style={{ ...pillStyle, top: 14, right: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ position: 'relative', width: 8, height: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span className="live-ring" style={{ animationDuration: '1.2s' }} />
+            <span style={{ display: 'block', width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', position: 'relative', zIndex: 1 }} />
+          </div>
           Loading gauges
         </div>
       )}
@@ -139,8 +140,8 @@ export function FloodMap() {
 
       {/* Gauge count */}
       {zoom >= MIN_ZOOM && !isFetching && gauges.length > 0 && (
-        <div style={{ ...pillStyle, bottom: 36, left: '50%', transform: 'translateX(-50%)' }}>
-          <span style={{ color: 'var(--accent)' }}>{gauges.length}</span>
+        <div style={{ ...pillStyle, bottom: 36, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{gauges.length}</span>
           {' '}gauge{gauges.length !== 1 ? 's' : ''} in view
         </div>
       )}

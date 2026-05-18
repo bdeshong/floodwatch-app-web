@@ -52,7 +52,7 @@ function StageBar({ stages, currentHeight }: StageBarProps) {
   return (
     <div style={{ marginBottom: 6 }}>
       {/* Track */}
-      <div style={{ position: 'relative', height: 6, borderRadius: 99, background: 'var(--bg-base)', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 10, borderRadius: 99, background: 'var(--bg-base)', overflow: 'hidden' }}>
         {/* Colored zone segments */}
         {thresholds.map((t, i) => {
           const start = i === 0 ? 0 : toPct(thresholds[i - 1].value)
@@ -66,7 +66,7 @@ function StageBar({ stages, currentHeight }: StageBarProps) {
                 width: `${width}%`,
                 height: '100%',
                 background: t.color,
-                opacity: 0.35,
+                opacity: 0.5,
               }}
             />
           )
@@ -81,8 +81,9 @@ function StageBar({ stages, currentHeight }: StageBarProps) {
               width: 2,
               height: '100%',
               background: 'var(--accent)',
-              boxShadow: '0 0 6px var(--accent-glow)',
+              boxShadow: '0 0 8px var(--accent-glow)',
               zIndex: 2,
+              animation: 'fade-up 0.4s 0.1s ease both',
             }}
           />
         )}
@@ -175,17 +176,18 @@ export function GaugeModal({ gauge, onClose }: Props) {
           width: '100%',
           maxWidth: 520,
           borderRadius: 18,
-          boxShadow: '0 8px 60px rgba(0,0,0,0.3)',
+          boxShadow: '0 24px 80px rgba(0,0,0,0.55), 0 8px 32px rgba(0,0,0,0.3)',
           maxHeight: '88vh',
           display: 'flex',
           flexDirection: 'column',
           border: '1px solid var(--border)',
           overflow: 'hidden',
+          animation: 'modal-in 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Teal accent top bar */}
-        <div style={{ height: 3, background: `linear-gradient(90deg, var(--accent) 0%, transparent 100%)`, flexShrink: 0 }} />
+        <div style={{ height: 4, background: `linear-gradient(90deg, var(--accent) 0%, var(--accent-mid) 60%, transparent 100%)`, flexShrink: 0 }} />
 
         {/* Loading bar */}
         <div style={{ height: 2, background: 'var(--border)', flexShrink: 0, overflow: 'hidden', opacity: isLoading ? 1 : 0, transition: 'opacity 0.3s' }}>
@@ -226,11 +228,11 @@ export function GaugeModal({ gauge, onClose }: Props) {
             <h2
               style={{
                 fontFamily: 'Syne, sans-serif',
-                fontSize: 13,
+                fontSize: 16,
                 fontWeight: 700,
                 color: 'var(--text-primary)',
                 margin: 0,
-                lineHeight: 1.3,
+                lineHeight: 1.25,
                 letterSpacing: '0.01em',
               }}
             >
@@ -287,28 +289,33 @@ export function GaugeModal({ gauge, onClose }: Props) {
         </div>
 
         {/* Scrollable body */}
-        <div style={{ overflowY: 'auto', flex: 1, padding: '16px 18px 18px' }}>
+        <div style={{ overflowY: 'auto', flex: 1, padding: '16px 18px 18px' }} className="modal-scroll">
 
           {/* Flood stages */}
           {hasStages && (
             <div style={{ marginBottom: 20 }}>
-              <p style={sectionLabel}>Flood Stages</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+                <div style={{ width: 2, height: 10, background: 'var(--accent)', borderRadius: 99, opacity: 0.7, flexShrink: 0 }} />
+                <p style={{ ...sectionLabel, marginBottom: 0 }}>Flood Stages</p>
+              </div>
               <StageBar stages={stages} currentHeight={currentHeight} />
             </div>
           )}
 
           {/* Charts */}
           <div>
-            <p style={sectionLabel}>Past 24 Hours</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+              <div style={{ width: 2, height: 10, background: 'var(--accent)', borderRadius: 99, opacity: 0.7, flexShrink: 0 }} />
+              <p style={{ ...sectionLabel, marginBottom: 0 }}>Past 24 Hours</p>
+            </div>
 
             {isLoading && (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 120, gap: 10 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
-                    <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite" />
-                  </path>
-                </svg>
-                <span style={{ fontFamily: 'IBM Plex Mono', fontSize: 11, color: 'var(--text-secondary)' }}>
+                <div style={{ position: 'relative', width: 10, height: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span className="live-ring" style={{ animationDuration: '1.2s' }} />
+                  <span style={{ display: 'block', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', position: 'relative', zIndex: 1 }} />
+                </div>
+                <span style={{ fontFamily: 'IBM Plex Mono', fontSize: 11, color: 'var(--text-secondary)', letterSpacing: '0.04em' }}>
                   Fetching USGS data
                 </span>
               </div>
