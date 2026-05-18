@@ -1,9 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUSGSData } from '../hooks/useUSGSData'
 import { ParameterChart } from './ParameterChart'
 import { useToast } from './Toast'
 import { USGSRateLimitError } from '../api/usgs'
 import type { Gauge } from '../types'
+
+const PERIODS = [
+  { value: 1,  label: '24h' },
+  { value: 7,  label: '7d' },
+  { value: 30, label: '30d' },
+  { value: 60, label: '60d' },
+  { value: 90, label: '90d' },
+] as const
+type PeriodDays = typeof PERIODS[number]['value']
 
 interface Props {
   gauge: Gauge
@@ -15,10 +24,10 @@ type StageStatus = 'normal' | 'action' | 'flood' | 'moderate' | 'major' | 'unkno
 const STATUS: Record<StageStatus, { label: string; color: string; bg: string }> = {
   unknown:  { label: 'No Stage Data', color: 'var(--text-muted)',    bg: 'rgba(61,92,118,0.18)' },
   normal:   { label: 'Normal',        color: 'var(--accent)',         bg: 'var(--accent-dim)' },
-  action:   { label: 'Action Stage',  color: 'var(--stage-action)',   bg: 'rgba(244,167,75,0.12)' },
-  flood:    { label: 'Flood Stage',   color: 'var(--stage-flood)',    bg: 'rgba(224,122,58,0.12)' },
-  moderate: { label: 'Moderate Flood',color: 'var(--stage-moderate)', bg: 'rgba(217,79,79,0.12)' },
-  major:    { label: 'Major Flood',   color: 'var(--stage-major)',    bg: 'rgba(192,32,32,0.15)' },
+  action:   { label: 'Action Stage',  color: 'var(--stage-action)',   bg: 'rgba(240,222,32,0.10)' },
+  flood:    { label: 'Flood Stage',   color: 'var(--stage-flood)',    bg: 'rgba(232,130,10,0.12)' },
+  moderate: { label: 'Moderate Flood',color: 'var(--stage-moderate)', bg: 'rgba(224,48,48,0.12)'  },
+  major:    { label: 'Major Flood',   color: 'var(--stage-major)',    bg: 'rgba(184,64,224,0.13)' },
 }
 
 function getStageStatus(height: number | null, stages: Gauge['nws']['stages']): StageStatus {
@@ -138,7 +147,8 @@ const sectionLabel: React.CSSProperties = {
 }
 
 export function GaugeModal({ gauge, onClose }: Props) {
-  const { data: params, isLoading, isError, error } = useUSGSData(gauge.usgs.id)
+  const [period, setPeriod] = useState<PeriodDays>(1)
+  const { data: params, isLoading, isError, error } = useUSGSData(gauge.usgs.id, period)
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -304,9 +314,48 @@ export function GaugeModal({ gauge, onClose }: Props) {
 
           {/* Charts */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
-              <div style={{ width: 2, height: 10, background: 'var(--accent)', borderRadius: 99, opacity: 0.7, flexShrink: 0 }} />
-              <p style={{ ...sectionLabel, marginBottom: 0 }}>Past 24 Hours</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <div style={{ width: 2, height: 10, background: 'var(--accent)', borderRadius: 99, opacity: 0.7, flexShrink: 0 }} />
+                <p style={{ ...sectionLabel, marginBottom: 0 }}>
+                  {period === 1 ? 'Past 24 Hours' : `Past ${period} Days`}
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: 3 }}>
+                {PERIODS.map((p) => (
+                  <button
+                    key={p.value}
+                    onClick={() => setPeriod(p.value)}
+                    style={{
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      fontSize: 10,
+                      fontWeight: period === p.value ? 600 : 400,
+                      color: period === p.value ? 'var(--accent)' : 'var(--text-muted)',
+                      background: period === p.value ? 'var(--accent-dim)' : 'transparent',
+                      border: `1px solid ${period === p.value ? 'var(--accent-mid)' : 'var(--border)'}`,
+                      borderRadius: 6,
+                      padding: '3px 9px',
+                      cursor: 'pointer',
+                      letterSpacing: '0.06em',
+                      transition: 'color 0.15s, background 0.15s, border-color 0.15s',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (period !== p.value) {
+                        (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)'
+                        ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-light)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (period !== p.value) {
+                        (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)'
+                        ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)'
+                      }
+                    }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {isLoading && (
@@ -329,7 +378,7 @@ export function GaugeModal({ gauge, onClose }: Props) {
 
             {!isLoading && !isError && params && params.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {params.map((p) => <ParameterChart key={p.code} parameter={p} />)}
+                {params.map((p) => <ParameterChart key={p.code} parameter={p} days={period} />)}
               </div>
             )}
 

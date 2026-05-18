@@ -34,17 +34,17 @@ async function fetchPage(url: string): Promise<{ features: USGSFeature[]; nextUr
   }
 }
 
-export async function fetchUSGSData(siteId: string): Promise<USGSParameter[]> {
+export async function fetchUSGSData(siteId: string, days = 1): Promise<USGSParameter[]> {
   const now = new Date()
-  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-  const timeRange = `${yesterday.toISOString()}/${now.toISOString()}`
+  const start = new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
+  const timeRange = `${start.toISOString()}/${now.toISOString()}`
 
   const params = new URLSearchParams({
     monitoring_location_id: `USGS-${siteId}`,
     parameter_code: '00065,00060,00045,00010',
     time: timeRange,
     f: 'json',
-    limit: '500',
+    limit: '1000',
   })
 
   const allFeatures: USGSFeature[] = []
@@ -80,12 +80,16 @@ export async function fetchUSGSData(siteId: string): Promise<USGSParameter[]> {
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
       )
       const info = PARAM_INFO[code] ?? { name: code, unit: units.get(code) ?? '' }
+      const cumulativeTotal = code === '00045'
+        ? sorted.reduce((sum, o) => sum + (o.value ?? 0), 0)
+        : undefined
       return {
         code,
         name: info.name,
         unit: units.get(code) ?? info.unit,
         observations: sorted,
         latest: sorted.length > 0 ? sorted[sorted.length - 1] : null,
+        cumulativeTotal,
       }
     })
     .sort(

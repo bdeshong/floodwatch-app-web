@@ -53,4 +53,5 @@ export interface USGSParameter {
   unit: string
   observations: USGSObservation[]
   latest: USGSObservation | null
+  cumulativeTotal?: number
 }

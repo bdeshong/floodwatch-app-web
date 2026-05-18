@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   ResponsiveContainer,
   AreaChart,
@@ -11,10 +12,14 @@ import type { USGSParameter } from '../types'
 
 interface Props {
   parameter: USGSParameter
+  days: number
 }
 
-function formatTick(isoTime: string): string {
-  return new Date(isoTime).toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
+function formatTick(isoTime: string, days: number): string {
+  const d = new Date(isoTime)
+  return days === 1
+    ? d.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
+    : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 function formatTooltipLabel(isoTime: string): string {
@@ -27,13 +32,33 @@ function formatTooltipLabel(isoTime: string): string {
   })
 }
 
-export function ParameterChart({ parameter }: Props) {
-  const data = parameter.observations.map((o) => ({ time: o.time, value: o.value }))
-  const tickInterval = Math.max(1, Math.floor(data.length / 5))
-  const gradId = `grad-${parameter.code}`
+export function ParameterChart({ parameter, days }: Props) {
+  const isPrecip = parameter.code === '00045'
+  const [showCumulative, setShowCumulative] = useState(true)
 
-  const currentValue = parameter.latest?.value
-  const hasValue = currentValue !== null && currentValue !== undefined
+  const rawData = parameter.observations.map((o) => ({ time: o.time, value: o.value }))
+
+  const cumulativeData = (() => {
+    let running = 0
+    return parameter.observations.map((o) => {
+      if (o.value !== null) running += o.value
+      return { time: o.time, value: running }
+    })
+  })()
+
+  const data = isPrecip && showCumulative ? cumulativeData : rawData
+
+  const tickInterval = Math.max(1, Math.floor(data.length / 5))
+  const gradId = `grad-${parameter.code}${isPrecip && showCumulative ? '-c' : ''}`
+
+  const displayValue = isPrecip && showCumulative
+    ? (parameter.cumulativeTotal ?? null)
+    : (parameter.latest?.value ?? null)
+  const hasValue = displayValue !== null && displayValue !== undefined
+
+  const unitLabel = isPrecip && showCumulative
+    ? `${parameter.unit} total`
+    : parameter.unit
 
   return (
     <div
@@ -46,7 +71,7 @@ export function ParameterChart({ parameter }: Props) {
       }}
     >
       {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: isPrecip ? 6 : 10 }}>
         <span
           style={{
             fontFamily: 'Syne, sans-serif',
@@ -70,13 +95,44 @@ export function ParameterChart({ parameter }: Props) {
               lineHeight: 1,
             }}
           >
-            {currentValue!.toFixed(2)}
+            {displayValue!.toFixed(2)}
             <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 5, fontWeight: 400 }}>
-              {parameter.unit}
+              {unitLabel}
             </span>
           </span>
         )}
       </div>
+
+      {/* Precipitation view toggle */}
+      {isPrecip && (
+        <div style={{ display: 'flex', gap: 3, marginBottom: 10 }}>
+          {(['Cumulative', 'Recorded'] as const).map((label) => {
+            const active = label === 'Cumulative' ? showCumulative : !showCumulative
+            return (
+              <button
+                key={label}
+                onClick={() => setShowCumulative(label === 'Cumulative')}
+                style={{
+                  fontFamily: 'IBM Plex Mono, monospace',
+                  fontSize: 9,
+                  fontWeight: active ? 600 : 400,
+                  color: active ? 'var(--accent)' : 'var(--text-muted)',
+                  background: active ? 'var(--accent-dim)' : 'transparent',
+                  border: `1px solid ${active ? 'var(--accent-mid)' : 'var(--border)'}`,
+                  borderRadius: 5,
+                  padding: '3px 8px',
+                  cursor: 'pointer',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  transition: 'color 0.15s, background 0.15s, border-color 0.15s',
+                }}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       <ResponsiveContainer width="100%" height={100}>
         <AreaChart data={data} margin={{ top: 2, right: 0, bottom: 0, left: -14 }}>
@@ -89,7 +145,7 @@ export function ParameterChart({ parameter }: Props) {
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey="time"
-            tickFormatter={formatTick}
+            tickFormatter={(t) => formatTick(t, days)}
             tick={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'IBM Plex Mono, monospace' }}
             interval={tickInterval - 1}
             tickLine={false}
@@ -101,6 +157,7 @@ export function ParameterChart({ parameter }: Props) {
             axisLine={false}
             width={36}
             tickFormatter={(v: number) => v.toFixed(1)}
+            domain={isPrecip && showCumulative ? [0, 'auto'] : ['auto', 'auto']}
           />
           <Tooltip
             contentStyle={{
