@@ -114,7 +114,7 @@ function StageBar({ stages, currentHeight }: StageBarProps) {
               gap: 1,
             }}
           >
-            <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 9, color: t.color, letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 9, color: t.color, letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>
               {t.value} ft
             </span>
           </div>
@@ -126,7 +126,7 @@ function StageBar({ stages, currentHeight }: StageBarProps) {
         {thresholds.map((t) => (
           <div key={t.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <div style={{ width: 6, height: 6, borderRadius: 99, background: t.color, flexShrink: 0 }} />
-            <span style={{ fontFamily: 'Syne, sans-serif', fontSize: 10, color: 'var(--text-secondary)', fontWeight: 500 }}>
+            <span style={{ fontSize: 10, color: 'var(--text-secondary)', fontWeight: 500 }}>
               {t.label}
             </span>
           </div>
@@ -137,10 +137,9 @@ function StageBar({ stages, currentHeight }: StageBarProps) {
 }
 
 const sectionLabel: React.CSSProperties = {
-  fontFamily: 'Syne, sans-serif',
   fontSize: 10,
   fontWeight: 700,
-  letterSpacing: '0.12em',
+  letterSpacing: '0.08em',
   textTransform: 'uppercase',
   color: 'var(--text-muted)',
   marginBottom: 10,
@@ -223,10 +222,9 @@ export function GaugeModal({ gauge, onClose }: Props) {
           <div style={{ flex: 1, minWidth: 0 }}>
             <p
               style={{
-                fontFamily: 'IBM Plex Mono, monospace',
                 fontSize: 10,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.06em',
+                letterSpacing: '0.04em',
                 margin: '0 0 4px',
               }}
             >
@@ -237,9 +235,8 @@ export function GaugeModal({ gauge, onClose }: Props) {
             </p>
             <h2
               style={{
-                fontFamily: 'Syne, sans-serif',
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 600,
                 color: 'var(--text-primary)',
                 margin: 0,
                 lineHeight: 1.25,
@@ -254,10 +251,9 @@ export function GaugeModal({ gauge, onClose }: Props) {
             {/* Status pill */}
             <span
               style={{
-                fontFamily: 'Syne, sans-serif',
                 fontSize: 10,
                 fontWeight: 700,
-                letterSpacing: '0.06em',
+                letterSpacing: '0.05em',
                 color: statusCfg.color,
                 background: statusCfg.bg,
                 border: `1px solid ${statusCfg.color}30`,
@@ -327,7 +323,6 @@ export function GaugeModal({ gauge, onClose }: Props) {
                     key={p.value}
                     onClick={() => setPeriod(p.value)}
                     style={{
-                      fontFamily: 'IBM Plex Mono, monospace',
                       fontSize: 10,
                       fontWeight: period === p.value ? 600 : 400,
                       color: period === p.value ? 'var(--accent)' : 'var(--text-muted)',
@@ -364,14 +359,14 @@ export function GaugeModal({ gauge, onClose }: Props) {
                   <span className="live-ring" style={{ animationDuration: '1.2s' }} />
                   <span style={{ display: 'block', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', position: 'relative', zIndex: 1 }} />
                 </div>
-                <span style={{ fontFamily: 'IBM Plex Mono', fontSize: 11, color: 'var(--text-secondary)', letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)', letterSpacing: '0.02em' }}>
                   Fetching USGS data
                 </span>
               </div>
             )}
 
             {isError && !isLoading && (
-              <p style={{ fontFamily: 'Syne', fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>
                 Failed to load USGS data
               </p>
             )}
@@ -383,7 +378,7 @@ export function GaugeModal({ gauge, onClose }: Props) {
             )}
 
             {!isLoading && !isError && params?.length === 0 && (
-              <p style={{ fontFamily: 'Syne', fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>
                 No recent data available
               </p>
             )}
@@ -392,10 +387,9 @@ export function GaugeModal({ gauge, onClose }: Props) {
           {/* Footer */}
           <p
             style={{
-              fontFamily: 'IBM Plex Mono, monospace',
               fontSize: 9,
               color: 'var(--text-muted)',
-              letterSpacing: '0.04em',
+              letterSpacing: '0.02em',
               textAlign: 'right',
               marginTop: 16,
               paddingTop: 12,

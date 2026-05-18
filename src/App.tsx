@@ -32,10 +32,9 @@ export default function App() {
               <img src="/fw-icon.png" width="28" height="28" style={{ borderRadius: 6 }} alt="FloodWatch" />
               <span
                 style={{
-                  fontFamily: 'Syne, sans-serif',
-                  fontWeight: 800,
+                  fontWeight: 700,
                   fontSize: 15,
-                  letterSpacing: '0.12em',
+                  letterSpacing: '0.04em',
                   color: 'var(--header-text)',
                   textTransform: 'uppercase',
                 }}
@@ -44,10 +43,9 @@ export default function App() {
               </span>
               <span
                 style={{
-                  fontFamily: 'IBM Plex Mono, monospace',
                   fontSize: 10,
                   color: 'rgba(232, 244, 255, 0.55)',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.04em',
                   display: 'none',
                   paddingLeft: 4,
                 }}
@@ -77,11 +75,10 @@ export default function App() {
               </div>
               <span
                 style={{
-                  fontFamily: 'IBM Plex Mono, monospace',
                   fontSize: 10,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   color: 'var(--accent)',
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.08em',
                   animation: 'gauge-ping 3s ease-in-out infinite',
                 }}
               >

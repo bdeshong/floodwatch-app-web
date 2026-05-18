@@ -63,7 +63,6 @@ const pillStyle: React.CSSProperties = {
   border: '1px solid var(--border)',
   borderRadius: 24,
   padding: '7px 16px',
-  fontFamily: 'IBM Plex Mono, monospace',
   fontSize: 11,
   color: 'var(--text-secondary)',
   pointerEvents: 'none' as const,

@@ -89,7 +89,6 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
       <span
         style={{
           flex: 1,
-          fontFamily: 'Syne, sans-serif',
           fontSize: 12,
           color: 'var(--text-primary)',
           lineHeight: 1.45,

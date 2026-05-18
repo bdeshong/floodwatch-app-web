@@ -74,10 +74,9 @@ export function ParameterChart({ parameter, days }: Props) {
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: isPrecip ? 6 : 10 }}>
         <span
           style={{
-            fontFamily: 'Syne, sans-serif',
             fontSize: 11,
             fontWeight: 600,
-            letterSpacing: '0.08em',
+            letterSpacing: '0.06em',
             textTransform: 'uppercase',
             color: 'var(--text-secondary)',
           }}
@@ -87,11 +86,10 @@ export function ParameterChart({ parameter, days }: Props) {
         {hasValue && (
           <span
             style={{
-              fontFamily: 'IBM Plex Mono, monospace',
               fontSize: 22,
-              fontWeight: 400,
+              fontWeight: 600,
               color: 'var(--text-primary)',
-              letterSpacing: '-0.03em',
+              letterSpacing: '-0.02em',
               lineHeight: 1,
             }}
           >
@@ -113,7 +111,6 @@ export function ParameterChart({ parameter, days }: Props) {
                 key={label}
                 onClick={() => setShowCumulative(label === 'Cumulative')}
                 style={{
-                  fontFamily: 'IBM Plex Mono, monospace',
                   fontSize: 9,
                   fontWeight: active ? 600 : 400,
                   color: active ? 'var(--accent)' : 'var(--text-muted)',
@@ -146,13 +143,13 @@ export function ParameterChart({ parameter, days }: Props) {
           <XAxis
             dataKey="time"
             tickFormatter={(t) => formatTick(t, days)}
-            tick={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'IBM Plex Mono, monospace' }}
+            tick={{ fontSize: 9, fill: 'var(--text-muted)', }}
             interval={tickInterval - 1}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            tick={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'IBM Plex Mono, monospace' }}
+            tick={{ fontSize: 9, fill: 'var(--text-muted)', }}
             tickLine={false}
             axisLine={false}
             width={36}
@@ -165,7 +162,6 @@ export function ParameterChart({ parameter, days }: Props) {
               border: '1px solid var(--border-light)',
               borderRadius: 8,
               fontSize: 11,
-              fontFamily: 'IBM Plex Mono, monospace',
               color: 'var(--text-primary)',
               boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
               padding: '6px 12px',
