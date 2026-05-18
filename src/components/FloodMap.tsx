@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useGauges } from '../hooks/useGauges'
+import { useGaugeByUsgsId } from '../hooks/useGaugeByUsgsId'
 import { useColorScheme } from '../hooks/useColorScheme'
 import { GaugeModal } from './GaugeModal'
 import type { Gauge, MapBounds } from '../types'
@@ -22,17 +24,30 @@ interface MapControllerProps {
   onBoundsChange: (bounds: MapBounds, zoom: number) => void
 }
 
-function GeolocateOnMount() {
+function GeolocateOnMount({ skip }: { skip?: boolean }) {
   const map = useMap()
 
   useEffect(() => {
-    if (!navigator.geolocation) return
+    if (skip || !navigator.geolocation) return
     navigator.geolocation.getCurrentPosition(
       (pos) => map.setView([pos.coords.latitude, pos.coords.longitude], DEFAULT_ZOOM),
       () => { /* denied or unavailable — stay on Atlanta default */ },
       { timeout: 8000, maximumAge: 60_000 }
     )
-  }, [map])
+  }, [map, skip])
+
+  return null
+}
+
+function FlyToGauge({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap()
+  const flew = useRef(false)
+
+  useEffect(() => {
+    if (flew.current) return
+    flew.current = true
+    map.setView([lat, lng], DEFAULT_ZOOM)
+  }, [map, lat, lng])
 
   return null
 }
@@ -76,6 +91,34 @@ export function FloodMap() {
   const [zoom, setZoom] = useState(DEFAULT_ZOOM)
   const [selected, setSelected] = useState<Gauge | null>(null)
 
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const urlUsgsId = location.pathname.match(/^\/gauge\/usgs\/([^/]+)$/)?.[1] ?? null
+
+  // Fetch gauge when arriving via a direct URL (only when nothing is already selected)
+  const { data: urlGauge } = useGaugeByUsgsId(urlUsgsId && !selected ? urlUsgsId : undefined)
+
+  // Open modal when gauge data arrives from a direct URL visit
+  useEffect(() => {
+    if (urlGauge && !selected) setSelected(urlGauge)
+  }, [urlGauge])
+
+  // Handle back/forward button: if path no longer has a gauge ID, close the modal
+  useEffect(() => {
+    if (!urlUsgsId && selected) setSelected(null)
+  }, [location.pathname])
+
+  const handleGaugeClick = useCallback((gauge: Gauge) => {
+    setSelected(gauge)
+    navigate(`/gauge/usgs/${gauge.usgs.id}`)
+  }, [navigate])
+
+  const handleClose = useCallback(() => {
+    setSelected(null)
+    navigate('/')
+  }, [navigate])
+
   const handleBoundsChange = useCallback((b: MapBounds, z: number) => {
     setBounds(b)
     setZoom(z)
@@ -103,14 +146,15 @@ export function FloodMap() {
           subdomains="abcd"
           maxZoom={19}
         />
-        <GeolocateOnMount />
+        <GeolocateOnMount skip={!!urlUsgsId} />
         <MapController onBoundsChange={handleBoundsChange} />
+        {urlGauge && <FlyToGauge lat={urlGauge.location.latitude} lng={urlGauge.location.longitude} />}
         {gauges.map((gauge) => (
           <Marker
             key={gauge.id}
             position={[gauge.location.latitude, gauge.location.longitude]}
             icon={GAUGE_ICON}
-            eventHandlers={{ click: () => setSelected(gauge) }}
+            eventHandlers={{ click: () => handleGaugeClick(gauge) }}
           >
             <Tooltip direction="top" offset={[0, -4]} opacity={1}>
               {gauge.name}
@@ -145,7 +189,7 @@ export function FloodMap() {
         </div>
       )}
 
-      {selected && <GaugeModal gauge={selected} onClose={() => setSelected(null)} />}
+      {selected && <GaugeModal gauge={selected} onClose={handleClose} />}
     </div>
   )
 }

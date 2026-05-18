@@ -13,3 +13,9 @@ export async function fetchGaugesInBounds(bounds: MapBounds): Promise<Gauge[]> {
   if (!res.ok) throw new Error(`FloodWatch API error: ${res.status}`)
   return res.json()
 }
+
+export async function fetchGaugeByUsgsId(usgsId: string): Promise<Gauge> {
+  const res = await fetch(`${BASE}/gauge/usgs/${usgsId}`)
+  if (!res.ok) throw new Error(`FloodWatch API error: ${res.status}`)
+  return res.json()
+}
