@@ -88,6 +88,7 @@ export default function App() {
           </header>
 
           <main style={{ flex: 1, overflow: 'hidden' }}>
+            <h1 className="sr-only">FloodWatch — Real-Time USGS Flood Gauge Map</h1>
             <FloodMap />
           </main>
         </div>

@@ -1,0 +1,43 @@
+# FloodWatch
+
+> FloodWatch is a real-time USGS water gauge monitoring web application that displays flood stage data across the United States. It visualizes gauge height, streamflow discharge, precipitation, and water temperature from the USGS National Water Information System (NWIS) alongside National Weather Service (NWS) flood stage thresholds (action, flood, moderate, major).
+
+## What FloodWatch Does
+
+FloodWatch plots active USGS stream gauges on an interactive map. Users pan and zoom to any US location to see gauges within the current map viewport. Clicking a gauge opens a detail panel showing:
+
+- Current gauge height in feet
+- Current flood stage status (Normal, Action Stage, Flood Stage, Moderate Flood, Major Flood)
+- NWS flood stage thresholds for that specific gauge
+- Time-series charts for gauge height, discharge (ft³/s), precipitation (inches), and water temperature (°C)
+- Historical data selectable from 24 hours to 90 days
+
+## Data Sources
+
+- Gauge locations and NWS flood thresholds: FloodWatch API
+- Time-series observations: USGS Water Data API (api.waterdata.usgs.gov), OGC API standard
+- USGS parameter codes: 00065 (gauge height), 00060 (discharge), 00045 (precipitation), 00010 (water temperature)
+
+## Flood Stage Classifications
+
+FloodWatch uses the National Weather Service definitions:
+- **Normal**: Below action stage — no flooding concern
+- **Action Stage**: Preliminary actions to prepare for possible flooding should be taken; typically a few feet below flood stage
+- **Flood Stage**: Water has reached the level at which overflow of natural banks begins to cause damage
+- **Moderate Flood**: Significant inundation of structures and roads; some evacuations may be required
+- **Major Flood**: Extensive inundation; large-scale evacuations; significant threat to life and property
+
+## Who This Is For
+
+- Homeowners and residents in flood-prone areas monitoring local waterway levels
+- Emergency managers and first responders tracking flood conditions
+- Outdoor enthusiasts (kayakers, anglers, hikers) checking river conditions before trips
+- Journalists and researchers monitoring active flood events
+
+## Coverage
+
+United States only. Data refreshes every 15 minutes from USGS instrumentation. The app requires zoom level 8 or greater to display gauges (viewport-bounded query).
+
+## Technical Notes
+
+FloodWatch is a client-side React/Vite single-page application. The page at the root URL renders an interactive Leaflet map. All gauge data is fetched dynamically from external APIs. Underlying USGS data is public domain (US Government Work).

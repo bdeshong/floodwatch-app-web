@@ -2,9 +2,110 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>floodwatch-app-web</title>
+
+    <title>FloodWatch — Real-Time USGS Flood Gauge Map</title>
+    <meta name="description" content="Monitor live river flood stages across the US. FloodWatch displays real-time USGS gauge height, discharge, and precipitation data with NWS flood stage thresholds on an interactive map." />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://floodwatch.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://floodwatch.app/" />
+    <meta property="og:site_name"   content="FloodWatch" />
+    <meta property="og:title"       content="FloodWatch — Real-Time USGS Flood Gauge Map" />
+    <meta property="og:description" content="Live USGS stream gauge data and NWS flood stage thresholds on an interactive US map. Updated every 15 minutes." />
+    <meta property="og:image"       content="https://floodwatch.app/og-image.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="FloodWatch — Real-Time USGS Flood Gauge Map" />
+    <meta name="twitter:description" content="Live USGS stream gauge data and NWS flood stage thresholds on an interactive US map." />
+    <meta name="twitter:image"       content="https://floodwatch.app/og-image.png" />
+
+    <!-- Favicons -->
+    <link rel="icon"             type="image/x-icon"  href="/favicon.ico" />
+    <link rel="icon"             type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon"                      href="/fw-icon.png" />
+
+    <!-- Schema: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FloodWatch",
+      "alternateName": "FloodWatch USGS Water Monitoring",
+      "description": "Real-time USGS water gauge monitoring app. View live flood stage data, gauge height, discharge, precipitation, and water temperature on an interactive map.",
+      "url": "https://floodwatch.app/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "isAccessibleForFree": true,
+      "inLanguage": "en-US",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Real-time USGS stream gauge data",
+        "Interactive flood stage map",
+        "Gauge height monitoring",
+        "Stream discharge monitoring",
+        "Precipitation tracking",
+        "Water temperature data",
+        "NWS flood stage thresholds",
+        "Historical data up to 90 days"
+      ],
+      "provider": {
+        "@type": "Organization",
+        "name": "FloodWatch",
+        "url": "https://floodwatch.app/"
+      }
+    }
+    </script>
+
+    <!-- Schema: Dataset -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      "name": "USGS Real-Time Water Data — Stream Gauges",
+      "description": "Real-time and historical observations from USGS stream gauges including gauge height (ft), stream discharge (ft³/s), precipitation (in), and water temperature (°C). Flood stage thresholds provided by the National Weather Service.",
+      "url": "https://floodwatch.app/",
+      "sameAs": "https://waterdata.usgs.gov/nwis/rt",
+      "keywords": ["USGS", "stream gauge", "flood stage", "water level", "discharge", "precipitation", "real-time water data", "NWS flood thresholds"],
+      "license": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
+      "isAccessibleForFree": true,
+      "spatialCoverage": {
+        "@type": "Place",
+        "name": "United States"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "U.S. Geological Survey",
+        "url": "https://www.usgs.gov",
+        "sameAs": "https://www.wikidata.org/wiki/Q193755"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "FloodWatch",
+        "url": "https://floodwatch.app/"
+      },
+      "distribution": [{
+        "@type": "DataDownload",
+        "encodingFormat": "application/json",
+        "contentUrl": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/continuous/items"
+      }],
+      "variableMeasured": [
+        { "@type": "PropertyValue", "name": "Gauge Height",     "propertyID": "USGS:00065", "unitText": "ft" },
+        { "@type": "PropertyValue", "name": "Stream Discharge", "propertyID": "USGS:00060", "unitText": "ft³/s" },
+        { "@type": "PropertyValue", "name": "Precipitation",    "propertyID": "USGS:00045", "unitText": "in" },
+        { "@type": "PropertyValue", "name": "Water Temperature","propertyID": "USGS:00010", "unitText": "°C" }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
